@@ -1,0 +1,150 @@
+@import "tailwindcss";
+/* CSS 变量定义，用于主题切换 */
+:root {
+    --bg-color: #fdfaf6;
+    --text-color: #6b5d50;
+    --text-color-light: #8c7a6b;
+    --text-color-lighter: #a1887f;
+    --accent-color: #aed9b4;
+    --card-bg: #ffffff;
+    --border-color: #dcd1c6;
+    --switch-bg: #e8e0d9;
+    --particle-color: rgba(180, 165, 150, 0.6);
+    --graph-link-color: #dcd1c6;
+}
+
+.dark {
+    --bg-color: #0d121c;
+    --text-color: #e2e8f0;
+    --text-color-light: #a0aec0;
+    --text-color-lighter: #718096;
+    --accent-color: #f6ad55;
+    --card-bg: #2d3748;
+    --border-color: #4a5568;
+    --switch-bg: #4a5568;
+    --graph-link-color: rgba(246, 173, 85, 0.3);
+}
+
+/* 全局样式 */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Noto Serif SC', serif;
+    transition: background-color 0.5s, color 0.5s;
+}
+.font-handwriting { font-family: 'LXGW WenKai TC', 'LXGW WenKai', sans-serif; }
+
+/* 页面切换动画 */
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.page-fade-enter-from,
+.page-fade-leave-to {
+  opacity: 0;
+}
+/* 新增：首页英雄区样式 */
+.hero-section {
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  overflow: hidden;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+  transition: transform 0.3s ease-out;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  margin: auto;
+  text-align: center;
+  animation: fadeIn 1.5s 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.hero-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.5rem 1.5rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  border-radius: 999px;
+  font-size: 1.125rem;
+  font-family: 'LXGW WenKai TC', 'LXGW WenKai', sans-serif;
+}
+
+.scroll-down-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  animation: fadeIn 1.5s 1.5s ease-out forwards, bounce 2s infinite;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  40% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 5rem;
+  }
+}
+
+
+/* 通用组件样式 */
+.nav-link{position:relative;transition:color .3s}.nav-link:hover{color:var(--text-color-lighter)}.nav-link::after{content:'';position:absolute;width:100%;height:2px;bottom:-4px;left:0;background-color:var(--border-color);transform:scaleX(0);transform-origin:bottom right;transition:transform .3s ease-out}.nav-link:hover::after{transform:scaleX(1);transform-origin:bottom left}
+.polaroid{background:var(--card-bg);padding:1rem;padding-bottom:3.5rem;box-shadow:0 4px 8px rgba(0,0,0,.08);border:1px solid var(--border-color);transition: all .3s ease;position:relative}.polaroid:hover{transform:scale(1.05) rotate(0deg)!important;box-shadow:0 8px 16px rgba(0,0,0,.12);z-index:10}.polaroid .caption{position:absolute;bottom:1rem;left:1rem;right:1rem;text-align:center;font-size:1.1rem;font-family:'LXGW WenKai TC','LXGW WenKai',sans-serif}
+.torn-tag{background-color:var(--card-bg);padding:8px 16px;border-radius:3px;box-shadow:1px 1px 3px rgba(0,0,0,.05);border:1px solid var(--border-color);cursor:pointer;transition:all .2s ease-in-out;font-weight:600;position:relative}.torn-tag:hover{transform:translateY(-2px);box-shadow:2px 2px 8px rgba(0,0,0,.1)}.torn-tag.active{background-color:var(--accent-color);color:var(--bg-color)}
+.view-switch{background-color:var(--switch-bg);border-radius:999px;padding:4px;display:flex;position:relative}.view-switch button{padding:6px 16px;border-radius:999px;transition:color .3s;z-index:1;font-weight:600;color: var(--text-color-light)}.view-switch .slider{position:absolute;top:4px;left:4px;height:calc(100% - 8px);width:calc(50% - 4px);background-color:var(--card-bg);border-radius:999px;box-shadow:0 1px 3px rgba(0,0,0,.1);transition:transform .3s ease-in-out}.view-switch.gallery-active .slider{transform:translateX(100%)}
+.dark .view-switch button.active { color: var(--text-color); }
+.light .view-switch button.active { color: #333; }
+.dark .node circle { filter: drop-shadow(0 0 8px var(--accent-color)); }
+.admin-form input, .admin-form select, .admin-form textarea { background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 0.25rem; padding: 0.5rem; }
+.internal-link { color: var(--accent-color); font-weight: bold; text-decoration: none; border-bottom: 2px solid transparent; transition: border-color 0.3s; }
+.internal-link:hover { border-bottom-color: var(--accent-color); }
+.internal-link-broken { color: var(--text-color-lighter); text-decoration: line-through; cursor: not-allowed; }
