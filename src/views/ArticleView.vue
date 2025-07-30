@@ -33,6 +33,7 @@ import { getPostById } from '@/services/postsAPI.js'
 import { marked } from 'marked'
 import Prism from '@/utils/prism.js'
 
+
 const props = defineProps({ id: { type: String, required: true } })
 const blogStore = useBlogStore()
 const contentRef = ref(null)
@@ -63,7 +64,6 @@ marked.setOptions({
     }
   }
 });
-// ===== 修改结束 =====
 
 watchEffect(async () => {
   post.value = null
