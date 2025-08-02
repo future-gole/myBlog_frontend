@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import { getPosts, createPost } from '@/services/postsAPI'
-import { getGraphData, getCategories } from '@/services/generalAPI'
+import {defineStore} from 'pinia'
+import {computed, ref} from 'vue'
+import {createPost, getPosts} from '@/services/postsAPI'
+import {getCategories, getGraphData} from '@/services/generalAPI'
 
 export const useBlogStore = defineStore('blog', () => {
   const posts = ref([])
@@ -49,8 +49,7 @@ export const useBlogStore = defineStore('blog', () => {
   }
 
   function loadTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    theme.value = savedTheme;
+    theme.value = localStorage.getItem('theme') || 'light';
     document.documentElement.className = theme.value;
   }
 

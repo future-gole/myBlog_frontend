@@ -12,12 +12,15 @@ apiClient.interceptors.request.use(
   (config) => {
     // 检查是否为需要认证的请求
     if (config.requiresAuth) {
-      const token = sessionStorage.getItem('jwt_token');
+      const token = localStorage.getItem('admin_token')
+      console.log(token)
+      console.log(token + " 1")
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
       } else {
+        console.error(token + " 1")
         // 如果需要 token 但本地没有，可以取消请求或重定向到登录页
-        console.error("请求需要认证，但未找到 token。");
+
         return Promise.reject(new Error("未认证"));
       }
     }

@@ -21,7 +21,7 @@ export const getPostById = (id) => {
  * @param {object} postData - 文章数据 { title, category, image, content }
  */
 export const createPost = (postData) => {
-  return apiClient.post('/posts', postData, { requiresAuth: true });
+  return apiClient.post('/posts/create', postData, { requiresAuth: true });
 };
 
 /**
@@ -31,7 +31,7 @@ export const createPost = (postData) => {
  * @param {object} postData - 需要更新的文章数据
  */
 export const updatePost = (categorySlug, titleSlug, postData) => {
-  return apiClient.put(`/posts/${categorySlug}/${titleSlug}`, postData, { requiresAuth: true });
+  return apiClient.put(`/posts/update`, postData, { requiresAuth: true });
 };
 
 /**
@@ -40,5 +40,5 @@ export const updatePost = (categorySlug, titleSlug, postData) => {
  * @param {string} titleSlug - 标题的 slug
  */
 export const deletePost = (categorySlug, titleSlug) => {
-  return apiClient.delete(`/posts/${categorySlug}/${titleSlug}`, { requiresAuth: true });
+  return apiClient.delete(`/posts/delete`, { requiresAuth: true });
 };

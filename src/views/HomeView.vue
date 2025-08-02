@@ -7,11 +7,11 @@
           欢迎来到doublez的小屋
         </h1>
         <p class="mt-6 text-xl md:text-2xl" style="color: var(--text-color-light)">
-          一个存放温暖、梦想与慢生活的地方。
+          一个存放知识、梦想与慢生活的地方。
         </p>
       </section>
       <section class="py-16 md:py-24">
-        <h2 class="text-3xl font-bold text-center mb-12 font-handwriting">小屋手记</h2>
+        <h2 class="text-3xl font-bold text-center mb-12 font-handwriting">近日文章</h2>
         <div v-if="recentPosts.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-16">
           <ArticleCard v-for="post in recentPosts" :key="post.id" :post="post" />
         </div>

@@ -6,7 +6,6 @@
         <RouterLink to="/" class="nav-link">首页</RouterLink>
         <RouterLink to="/archive" class="nav-link">所有文章</RouterLink>
         <RouterLink to="/graph" class="nav-link">关系图谱</RouterLink>
-        <RouterLink to="/admin" class="nav-link font-bold" style="color: var(--accent-color);">写博客</RouterLink>
       </nav>
     </div>
   </header>
