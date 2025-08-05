@@ -91,11 +91,16 @@
         </aside>
       </div>
     </article>
+    <!-- Lightbox 图片放大浮层 -->
+    <div v-if="isLightboxVisible" class="lightbox-overlay" @click="closeLightbox">
+      <img :src="lightboxImageUrl" alt="放大的图片" class="lightbox-image" @click.stop />
+      <span class="lightbox-close">&times;</span>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, watchEffect, nextTick, onMounted, onUnmounted } from 'vue'
+import { computed, watch, ref, watchEffect, nextTick, onMounted, onUnmounted } from 'vue'
 import { useBlogStore } from '@/store/blogStore'
 import TheHeader from '@/components/TheHeader.vue'
 import MiniGraph from '@/components/MiniGraph.vue'
@@ -114,6 +119,9 @@ const tableOfContents = ref([])
 const activeHeading = ref('')
 const readingProgress = ref(0)
 
+// Lightbox 相关的状态
+const isLightboxVisible = ref(false)
+const lightboxImageUrl = ref('')
 // ===== 修改点：使用兼容性更好的配置方式 =====
 marked.use({
   breaks: true,
@@ -245,6 +253,47 @@ watchEffect(() => {
   }
 })
 
+// ===== 【新增】Lightbox 事件处理函数 =====
+
+// 打开 Lightbox
+const openLightbox = (imageUrl) => {
+  lightboxImageUrl.value = imageUrl
+  isLightboxVisible.value = true
+  document.body.style.overflow = 'hidden' // 禁止背景滚动
+}
+
+// 关闭 Lightbox
+const closeLightbox = () => {
+  isLightboxVisible.value = false
+  lightboxImageUrl.value = ''
+  document.body.style.overflow = '' // 恢复背景滚动
+}
+
+// 内容区域的点击事件处理器 (事件委托)
+const handleContentClick = (event) => {
+  // 检查点击的是否是 IMG 标签
+  if (event.target.tagName === 'IMG') {
+    event.preventDefault() // 阻止可能的默认行为
+    openLightbox(event.target.src)
+  }
+}
+
+// 处理 Esc 键关闭
+const handleKeydown = (event) => {
+  if (event.key === 'Escape' && isLightboxVisible.value) {
+    closeLightbox()
+  }
+}
+
+watch(contentRef, (newEl, oldEl) => {
+  if (oldEl) {
+    oldEl.removeEventListener('click', handleContentClick)
+  }
+  if (newEl) {
+    newEl.addEventListener('click', handleContentClick)
+  }
+})
+
 // 监听滚动事件
 const handleScroll = () => {
   updateActiveHeading()
@@ -253,10 +302,13 @@ const handleScroll = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  window.addEventListener('keydown', handleKeydown) // 【新增】监听键盘事件
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('keydown', handleKeydown) // 【新增】移除键盘监听
+  document.body.style.overflow = '' // 【新增】确保组件卸载时恢复滚动
 })
 </script>
 
@@ -486,6 +538,67 @@ onUnmounted(() => {
 .toc-level-4 .toc-link { padding-left: 2.5rem; }
 .toc-level-5 .toc-link { padding-left: 3rem; }
 .toc-level-6 .toc-link { padding-left: 3.5rem; }
+
+/* 【新增】让文章内的图片有可点击的提示 */
+.markdown-content :deep(img) {
+  cursor: zoom-in;
+  transition: opacity 0.2s ease;
+}
+.markdown-content :deep(img:hover) {
+  opacity: 0.85;
+}
+
+/* 【新增】Lightbox 样式 */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: zoom-out;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  cursor: default;
+  animation: zoomIn 0.3s ease-out;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  font-size: 3rem;
+  color: white;
+  font-weight: 300;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.lightbox-close:hover {
+  opacity: 0.7;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
 /* 平板端适配 */
 @media (max-width: 1200px) {

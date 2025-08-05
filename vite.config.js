@@ -21,7 +21,10 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:16160', // 你的未来后端地址
         changeOrigin: true,
-        // 注意：这里暂时不需要 rewrite，因为你的 API 调用已经包含了 /api
+      },
+      '/images': {
+        target: 'http://localhost:16160', // 同样指向 Spring Boot 后端地址
+        changeOrigin: true,
       }
     }
   }

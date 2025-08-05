@@ -37,12 +37,15 @@
           <input v-if="isNewCategory" v-model="newCategory" type="text" class="w-full mt-2" placeholder="输入新分类名">
         </div>
         <div>
-          <label class="block text-sm font-bold mb-2">图片URL</label>
-          <input v-model="form.image" type="text" class="w-full" placeholder="https://placehold.co/...">
-        </div>
-        <div>
           <label class="block text-sm font-bold mb-2">内容 (使用 [[标题]] 来链接文章)</label>
-          <textarea v-model="form.content" rows="20" class="w-full" required></textarea>
+          <textarea
+              ref="textareaRef"
+              v-model="form.content"
+              @paste="handlePaste"
+              rows="20"
+              class="w-full"
+              required>
+          </textarea>
         </div>
         <div>
           <button type="submit" class="bg-[var(--accent-color)] hover:opacity-90 text-white font-bold py-2 px-6 rounded">
@@ -85,6 +88,9 @@ import TheHeader from '@/components/TheHeader.vue'
 // 引入 Marked 和 Prism，用于预览渲染
 import { marked } from 'marked'
 import Prism from '@/utils/prism.js'
+import {uploadImage} from "@/services/postsAPI.js";
+
+const IMAGE_BASE_URL = '/images/'
 
 const blogStore = useBlogStore()
 const router = useRouter()
@@ -99,7 +105,7 @@ const form = reactive({
 const isNewCategory = ref(false)
 const newCategory = ref('')
 
-// ===== 新增：预览相关状态 =====
+// ===== 预览相关状态 =====
 const isPreviewing = ref(false)
 const previewContainerRef = ref(null)
 
@@ -121,7 +127,7 @@ marked.setOptions({
   }
 });
 
-// ===== 新增：计算属性，用于生成预览的 HTML =====
+// ===== 计算属性，用于生成预览的 HTML =====
 const previewHtml = computed(() => {
   if (!form.content) {
     return '<p class="text-center text-gray-500 py-8">在编辑区域输入一些 Markdown 内容来查看预览...</p>'
@@ -147,7 +153,7 @@ const previewHtml = computed(() => {
   }
 })
 
-// ===== 新增：监听预览状态，切换时触发 Prism 高亮 =====
+// ===== 监听预览状态，切换时触发 Prism 高亮 =====
 watch(isPreviewing, (isNowPreviewing) => {
   if (isNowPreviewing) {
     // 等待 DOM 更新后，再执行高亮
@@ -160,6 +166,71 @@ watch(isPreviewing, (isNowPreviewing) => {
 })
 
 const onCategoryChange = () => { isNewCategory.value = form.category === 'new-category' }
+
+// ===== 粘贴图片处理逻辑 =====
+
+// 获取 textarea 的 DOM 引用
+const textareaRef = ref(null)
+
+const handlePaste = (event) => {
+  const items = (event.clipboardData || window.clipboardData).items
+  let file = null
+
+  // 遍历剪贴板项目，查找图片文件
+  for (const item of items) {
+    if (item.kind === 'file' && item.type.startsWith('image/')) {
+      file = item.getAsFile()
+      break
+    }
+  }
+
+  if (file) {
+    // 阻止默认的粘贴行为
+    event.preventDefault()
+    // 调用上传函数
+    uploadImageAndInsertMarkdown(file)
+  }
+}
+
+const uploadImageAndInsertMarkdown = async (file) => {
+  const textarea = textareaRef.value
+  if (!textarea) return
+
+  // 1. 在光标位置插入占位符，提供即时反馈
+  const placeholder = `![Uploading ${file.name}...]()`
+  const startPos = textarea.selectionStart
+  const endPos = textarea.selectionEnd
+  const currentContent = form.content
+  form.content = currentContent.substring(0, startPos) + placeholder + currentContent.substring(endPos)
+
+  // 2. 准备上传数据
+  const formData = new FormData()
+  formData.append('file', file)
+
+  // 【重要】: 你的后端需要 articleId。但在创建新文章时，ID 还不存在。
+  // 这里的处理方式需要你和后端协调：
+  // 方案A: 后端允许 articleId 为空或特定值 (如 0)，图片先存入临时区。
+  // 方案B: 前端先"创建草稿"获取ID，再上传图片。
+  // 这里我们暂时传递 '0' 作为新文章的标识，你需要确保后端能处理这种情况。
+  formData.append('articleId', '0')
+
+  try {
+    // 3. 发起请求
+    const relativePath  = await uploadImage(formData)
+
+    // axios 拦截器已经处理了 response.data，所以这里直接拿到的就是后端返回的字符串
+
+    const fullUrl = `${IMAGE_BASE_URL}${relativePath}`.replace(/\/\//g, '/');
+    const markdownImage = `![${file.name}](${fullUrl})`;
+
+    form.content = form.content.replace(placeholder, markdownImage);
+
+  } catch (error) {
+    console.error('Image upload failed:', error);
+    alert('图片上传失败！');
+    form.content = form.content.replace(placeholder, `![Image upload failed]`);
+  }
+}
 
 const submitPost = async () => {
   let finalCategory = form.category;
@@ -215,7 +286,6 @@ const submitPost = async () => {
 
 /* 让表单输入框样式更好看一些 */
 .admin-form .w-full {
-  background-color: var(--input-bg);
   border: 1px solid var(--border-color);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;

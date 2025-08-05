@@ -1,6 +1,19 @@
 import apiClient from './axiosInstance';
 
 /**
+ * 上传图片
+ */
+export const uploadImage = (formData) => {
+  return apiClient.post("/upload/image", formData, {
+    headers: {
+      //覆盖全局设置
+      'Content-Type': 'multipart/form-data',
+    },
+    // 使得确保认证拦截器生效
+    requiresAuth: true
+  });
+}
+/**
  * 获取所有文章的核心信息列表 (公开接口)
  */
 export const getPosts = () => {
