@@ -48,6 +48,7 @@
               </div>
             </div>
           </div>
+          <ArticleRelations :post-id="post.id" />
         </aside>
 
         <!-- 中间主内容区域 -->
@@ -59,11 +60,11 @@
               ref="contentRef"
           ></div>
 
-          <hr class="my-16 border-t" style="border-color:var(--border-color)">
-          <section class="text-center">
-            <h2 class="text-3xl font-bold font-handwriting mb-8">思绪连接</h2>
-            <MiniGraph :post-id="post.id" />
-          </section>
+<!--          <hr class="my-16 border-t" style="border-color:var(&#45;&#45;border-color)">-->
+<!--          <section class="text-center">-->
+<!--            <h2 class="text-3xl font-bold font-handwriting mb-8">思绪连接</h2>-->
+<!--            <MiniGraph :post-id="post.id" />-->
+<!--          </section>-->
         </main>
 
         <!-- 右侧目录导航 - 手机端隐藏 -->
@@ -104,6 +105,7 @@ import { computed, watch, ref, watchEffect, nextTick, onMounted, onUnmounted } f
 import { useBlogStore } from '@/store/blogStore'
 import TheHeader from '@/components/TheHeader.vue'
 import MiniGraph from '@/components/MiniGraph.vue'
+import ArticleRelations from '@/components/ArticleRelations.vue'
 import { getPostById } from '@/services/postsAPI.js'
 import { marked } from 'marked'
 import Prism from '@/utils/prism.js'
@@ -167,15 +169,41 @@ watchEffect(async () => {
 const renderedContent = computed(() => {
   if (!post.value || !post.value.content) return ''
 
-  const titleToIdMap = new Map(blogStore.posts.map(p => [p.title, p.id]))
-  const linkRegex = /\[\[([^\]]+)\]\]/g
-
-  // 先处理自定义链接
-  const linkedContent = post.value.content.replace(linkRegex, (match, title) => {
-    if (titleToIdMap.has(title)) {
-      return `<a href="#/article/${titleToIdMap.get(title)}" class="internal-link">${title}</a>`
+  // 创建一个更精确的映射：标题 -> 文章数组（处理同名情况）
+  const titleToPostsMap = new Map()
+  blogStore.posts.forEach(post => {
+    const title = post.title
+    if (!titleToPostsMap.has(title)) {
+      titleToPostsMap.set(title, [])
     }
-    return `<span class="internal-link-broken">${title}</span>`
+    titleToPostsMap.get(title).push(post)
+  })
+
+  // 处理内部链接，支持 [[标题]] 和 [[分类/标题]] 两种格式
+  const linkRegex = /\[\[([^\]]+)\]\]/g
+  const linkedContent = post.value.content.replace(linkRegex, (match, linkText) => {
+    // 检查是否包含分类信息
+    if (linkText.includes('/')) {
+      const [category, title] = linkText.split('/', 2)
+      const targetPost = blogStore.posts.find(p => p.title === title && p.category === category)
+      if (targetPost) {
+        return `<a href="#/article/${targetPost.id}" class="internal-link">${title}</a>`
+      }
+      return `<span class="internal-link-broken">${linkText}</span>`
+    } else {
+      // 只有标题的情况
+      const posts = titleToPostsMap.get(linkText)
+      if (posts && posts.length > 0) {
+        if (posts.length === 1) {
+          // 只有一篇文章，直接链接
+          return `<a href="#/article/${posts[0].id}" class="internal-link">${linkText}</a>`
+        } else {
+          // 多篇同名文章，显示为模糊链接并提示
+          return `<span class="internal-link-ambiguous" title="存在多篇同名文章">${linkText}</span>`
+        }
+      }
+      return `<span class="internal-link-broken">${linkText}</span>`
+    }
   })
 
   // 使用 marked 解析
@@ -302,13 +330,13 @@ const handleScroll = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
-  window.addEventListener('keydown', handleKeydown) // 【新增】监听键盘事件
+  window.addEventListener('keydown', handleKeydown) // 监听键盘事件
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('keydown', handleKeydown) // 【新增】移除键盘监听
-  document.body.style.overflow = '' // 【新增】确保组件卸载时恢复滚动
+  window.removeEventListener('keydown', handleKeydown) // 移除键盘监听
+  document.body.style.overflow = '' // 确保组件卸载时恢复滚动
 })
 </script>
 
