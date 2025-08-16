@@ -474,44 +474,197 @@ const navigateToArticle = (articleId) => {
 /* 响应式设计 */
 @media (max-width: 768px) {
   .article-relations {
-    margin-top: 1rem;
+    margin-top: 0;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .relations-nav {
+    background: var(--card-bg);
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .nav-tab {
+    flex: 1;
+    padding: 1.25rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid var(--border-color);
+    background: var(--bg-color-secondary);
+    transition: all 0.3s ease;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 5rem;
+  }
+
+  .nav-tab::after {
+    display: none;
+  }
+
+  .nav-tab.active {
+    background: linear-gradient(135deg, var(--accent-color), #ff8a65);
+    color: white;
+    border-color: var(--accent-color);
+    box-shadow: 0 6px 20px rgba(244, 146, 109, 0.3);
+    transform: translateY(-3px);
+  }
+
+  .nav-tab.active .tab-icon {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: scale(1.1);
+  }
+
+  .nav-tab.active .tab-badge {
+    background: white;
+    color: var(--accent-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .nav-tab:not(.active):hover {
+    background: rgba(244, 146, 109, 0.1);
+    border-color: rgba(244, 146, 109, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .tab-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .tab-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .tab-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .tab-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 0.75rem;
+  }
+
+  .relations-content {
+    padding: 1.25rem;
+    max-height: 65vh;
+  }
+
+  .link-card {
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-header {
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .card-category {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.5rem;
+  }
+
+  .card-date {
+    font-size: 0.75rem;
+  }
+
+  .links-grid {
+    gap: 1rem;
+  }
+
+  .link-direction {
+    font-size: 0.8rem;
+  }
+
+  .empty-state {
+    padding: 2.5rem 1.5rem;
+    min-height: 180px;
+  }
+
+  .empty-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 1.25rem;
+  }
+
+  .empty-text {
+    font-size: 1.1rem;
+  }
+
+  .empty-hint {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .relations-nav {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .nav-tab {
+    padding: 1rem 0.75rem;
+    min-height: 4.5rem;
+  }
+
+  .tab-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .tab-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .tab-text {
+    font-size: 0.8rem;
+  }
+
+  .tab-badge {
+    top: 0.5rem;
+    right: 0.5rem;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    font-size: 0.65rem;
   }
 
   .relations-content {
     padding: 1rem;
   }
 
-  .nav-tab {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.85rem;
-  }
-
-  .tab-text {
-    display: none;
-  }
-
-  .link-card {
-    padding: 1rem;
-  }
-
   .card-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
-  .links-grid {
-    gap: 0.75rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .tab-icon {
-    width: 18px;
-    height: 18px;
-  }
-
-  .tab-icon svg {
-    width: 10px;
-    height: 10px;
+  .card-category {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
   }
 }
 </style>

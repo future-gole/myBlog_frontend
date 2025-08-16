@@ -48,7 +48,9 @@
               </div>
             </div>
           </div>
-          <ArticleRelations :post-id="post.id" />
+          <div class="desktop-article-relations">
+            <ArticleRelations :post-id="post.id" />
+          </div>
         </aside>
 
         <!-- 中间主内容区域 -->
@@ -59,6 +61,11 @@
               v-html="renderedContent"
               ref="contentRef"
           ></div>
+
+          <!-- 手机端文章关联放在底部 -->
+          <div class="mobile-article-relations">
+            <ArticleRelations :post-id="post.id" />
+          </div>
 
 <!--          <hr class="my-16 border-t" style="border-color:var(&#45;&#45;border-color)">-->
 <!--          <section class="text-center">-->
@@ -652,6 +659,15 @@ onUnmounted(() => {
   }
 }
 
+/* 响应式控制ArticleRelations显示位置 */
+.mobile-article-relations {
+  display: none;
+}
+
+.desktop-article-relations {
+  display: block;
+}
+
 /* 手机端适配 - 隐藏导航栏，修复正文显示 */
 @media (max-width: 768px) {
   .article-layout {
@@ -661,16 +677,69 @@ onUnmounted(() => {
   .left-sidebar {
     position: static;
     width: 100%;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
 
   .meta-section {
     flex-direction: column;
     padding: 1rem;
+    gap: 1rem;
   }
 
   .progress-line-container {
     display: none; /* 手机端隐藏进度线 */
+  }
+
+  .meta-content {
+    gap: 1rem;
+  }
+
+  .meta-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: var(--bg-color-secondary);
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-color);
+  }
+
+  .meta-row.tags-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .meta-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-color-lighter);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: fit-content;
+  }
+
+  .category-badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .meta-value {
+    font-size: 0.8rem;
+    color: var(--text-color-light);
+    text-align: right;
+  }
+
+  .tags-list {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 0.4rem;
+  }
+
+  .tag-item {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
   }
 
   .main-content {
@@ -682,6 +751,17 @@ onUnmounted(() => {
 
   .right-sidebar {
     display: none; /* 手机端隐藏导航栏 */
+  }
+
+  /* 控制ArticleRelations在手机端的显示位置 */
+  .desktop-article-relations {
+    display: none; /* 手机端隐藏桌面版ArticleRelations */
+  }
+
+  .mobile-article-relations {
+    display: block; /* 手机端显示移动版ArticleRelations */
+    margin-top: 3rem;
+    padding: 0 1rem;
   }
 
   /* 手机端标题调整 */
@@ -702,10 +782,6 @@ onUnmounted(() => {
 
   .meta-section {
     padding: 0.75rem;
-  }
-
-  .meta-content {
-    gap: 1rem;
   }
 }
 
