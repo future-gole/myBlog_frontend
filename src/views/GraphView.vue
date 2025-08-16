@@ -5,11 +5,13 @@
       <div class="container mx-auto mt-6 font-handwriting">
         <h1 class="text-2xl font-bold">思绪地图</h1>
         <p class="text-md mt-1" style="color: var(--text-color-light);">点击下面的主题标签，探索不同的灵感星系。</p>
-        <div class="flex flex-wrap gap-3 mt-4">
-           <button v-for="cat in blogStore.categories" :key="cat" @click="activeCategory = cat" class="torn-tag" :class="{ 'active': activeCategory === cat }">
-            {{ cat }}
-          </button>
-        </div>
+        <CategoryTags 
+          v-model="activeCategory"
+          :categories="blogStore.categories"
+          :center-align="false"
+          :show-scroll-hint="true"
+          class="mt-4"
+        />
       </div>
     </div>
     <GraphVisualization 
@@ -26,6 +28,8 @@ import { ref } from 'vue'
 import { useBlogStore } from '@/store/blogStore'
 import TheHeader from '@/components/TheHeader.vue'
 import GraphVisualization from '@/components/GraphVisualization.vue'
+import CategoryTags from '@/components/CategoryTags.vue'
+
 const blogStore = useBlogStore()
 const activeCategory = ref('全部')
 </script>

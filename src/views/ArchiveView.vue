@@ -13,51 +13,13 @@
         </div>
       </div>
       <!-- 标签筛选区域 -->
-      <div class="tags-container mb-12">
-        <!-- 移动端：水平滚动 -->
-        <div class="md:hidden">
-          <div class="flex gap-3 overflow-x-auto pb-2 px-1 scrollbar-thin snap-x snap-mandatory">
-            <button 
-              v-for="cat in blogStore.categories" 
-              :key="cat" 
-              @click="currentCategory = cat" 
-              class="torn-tag flex-shrink-0 snap-start" 
-              :class="{ 'active': currentCategory === cat }"
-            >
-              {{ cat }}
-            </button>
-          </div>
-          <!-- 移动端提示 -->
-          <div class="text-center mt-2 text-xs opacity-60">
-            👆 左右滑动查看更多分类
-          </div>
-        </div>
-        
-        <!-- 桌面端：智能布局 -->
-        <div class="hidden md:block">
-          <div class="flex flex-wrap justify-center gap-4" :class="{ 'max-h-20 overflow-hidden': !showAllTags && blogStore.categories.length > 8 }">
-            <button 
-              v-for="cat in blogStore.categories" 
-              :key="cat" 
-              @click="currentCategory = cat" 
-              class="torn-tag" 
-              :class="{ 'active': currentCategory === cat }"
-            >
-              {{ cat }}
-            </button>
-          </div>
-          <!-- 展开/收起按钮 -->
-          <div v-if="blogStore.categories.length > 8" class="text-center mt-4">
-            <button 
-              @click="showAllTags = !showAllTags"
-              class="text-sm px-4 py-2 rounded-full transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-              style="color: var(--text-color-light);"
-            >
-              {{ showAllTags ? '收起 ↑' : '显示更多分类 ↓' }}
-            </button>
-          </div>
-        </div>
-      </div>
+      <CategoryTags 
+        v-model="currentCategory"
+        :categories="blogStore.categories"
+        :center-align="true"
+        :show-scroll-hint="true"
+        class="mb-12"
+      />
       <div id="posts-container">
         <div v-if="currentView === 'list'">
           <a v-for="post in filteredPosts" :key="post.id" :href="`#/article/${post.id}`" class="block py-6 border-b group" style="border-color:var(--border-color)">
@@ -83,11 +45,11 @@ import { ref, computed } from 'vue'
 import { useBlogStore } from '@/store/blogStore'
 import TheHeader from '@/components/TheHeader.vue'
 import ArticleCard from '@/components/ArticleCard.vue'
+import CategoryTags from '@/components/CategoryTags.vue'
 
 const blogStore = useBlogStore()
 const currentView = ref('list')
 const currentCategory = ref('全部')
-const showAllTags = ref(false)
 
 const filteredPosts = computed(() => {
   if (currentCategory.value === '全部') return blogStore.posts
