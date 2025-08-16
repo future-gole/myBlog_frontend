@@ -19,8 +19,8 @@ onMounted(() => {
 .light #daylight-effect { opacity: 1; }
 .star { position: absolute; background-color: #fff; border-radius: 50%; animation: twinkle 5s infinite ease-in-out; }
 @keyframes twinkle { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-.shooting-star { position: absolute; height: 2px; background: linear-gradient(-45deg, var(--accent-color), rgba(0, 0, 0, 0)); border-radius: 999px; filter: drop-shadow(0 0 6px var(--accent-color)); animation: shooting-star-anim 15s ease-in-out infinite; }
-@keyframes shooting-star-anim { 0% { transform: translateX(0) translateY(0) rotate(135deg); } 100% { transform: translateX(-100vw) translateY(100vh) rotate(135deg); opacity: 0; } }
+.shooting-star { position: absolute; height: 2px; background: linear-gradient(135deg, var(--accent-color), rgba(0, 0, 0, 0)); border-radius: 999px; filter: drop-shadow(0 0 6px var(--accent-color)); animation: shooting-star-anim 15s ease-in-out infinite; }
+@keyframes shooting-star-anim { 0% { transform: translateX(0) translateY(0) rotate(-45deg); } 100% { transform: translateX(-100vw) translateY(100vh) rotate(-45deg); opacity: 0; } }
 .particle { position: absolute; background-color: var(--particle-color); border-radius: 50%; animation: float-up 20s infinite linear; filter: blur(0.5px); }
 @keyframes float-up { 0% { transform: translateY(0); opacity: 0.7; } 100% { transform: translateY(-100vh); opacity: 0; } }
 </style>
