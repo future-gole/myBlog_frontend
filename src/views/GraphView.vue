@@ -4,7 +4,7 @@
       <TheHeader />
       <div class="container mx-auto mt-6 font-handwriting">
         <h1 class="text-2xl font-bold">思绪地图</h1>
-        <p class="text-md mt-1" style="color: var(--text-color-light);">点击下面的主题标签，探索不同的灵感星系。</p>
+        <p class="text-md mt-1" style="color: var(--color-fg-subtle);">点击下面的主题标签，探索不同的灵感星系。</p>
         <CategoryTags 
           v-model="activeCategory"
           :categories="blogStore.categories"

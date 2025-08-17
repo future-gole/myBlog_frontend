@@ -145,7 +145,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: var(--bg-color);
+  background: var(--color-bg);
   z-index: 1000;
   overflow: hidden;
 }
@@ -189,7 +189,7 @@ onMounted(() => {
 
 .particle {
   position: absolute;
-  background: var(--particle-color);
+  background: var(--color-particle);
   border-radius: 50%;
   animation: particleFloat linear infinite;
 }
@@ -224,13 +224,13 @@ onMounted(() => {
 .floating-circle {
   position: absolute;
   border-radius: 50%;
-  background: linear-gradient(45deg, var(--accent-color), rgba(244, 146, 109, 0.3));
+  background: linear-gradient(45deg, var(--color-accent), rgba(244, 146, 109, 0.3));
   animation: floatUpDown 6s ease-in-out infinite;
 }
 
 .floating-square {
   position: absolute;
-  background: linear-gradient(45deg, var(--th-color), rgba(91, 138, 174, 0.3));
+  background: linear-gradient(45deg, var(--color-table-head), rgba(91, 138, 174, 0.3));
   transform: rotate(45deg);
   animation: floatUpDown 8s ease-in-out infinite reverse;
 }
@@ -299,7 +299,7 @@ onMounted(() => {
 .title-decoration {
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, var(--accent-color), var(--th-color));
+  background: linear-gradient(90deg, var(--color-accent), var(--color-table-head));
   margin: 0 auto 2rem;
   border-radius: 2px;
   animation: expandWidth 2s ease-out 0.5s both;
@@ -316,7 +316,7 @@ onMounted(() => {
 
 .main-title {
   font-size: 2.5rem;
-  color: var(--text-color);
+  color: var(--color-fg);
   margin: 0;
   line-height: 1.2;
   text-shadow: 0 2px 20px rgba(0,0,0,0.1);
@@ -338,7 +338,7 @@ onMounted(() => {
   display: inline-block;
   width: 3px;
   height: 1.2em;
-  background-color: var(--accent-color);
+  background-color: var(--color-accent);
   margin-left: 2px;
   animation: cursorBlink 1s infinite;
 }
@@ -364,12 +364,12 @@ onMounted(() => {
 .subtitle-line {
   width: 40px;
   height: 1px;
-  background: var(--border-color);
+  background: var(--color-border);
   margin: 0 1rem;
 }
 
 .subtitle {
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   font-size: 1rem;
   margin: 0;
   white-space: nowrap;
@@ -396,7 +396,7 @@ onMounted(() => {
 .progress-bar {
   width: 200px;
   height: 4px;
-  background: var(--border-color);
+  background: var(--color-border);
   border-radius: 2px;
   margin: 0 auto 1rem;
   overflow: hidden;
@@ -404,13 +404,13 @@ onMounted(() => {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent-color), var(--th-color));
+  background: linear-gradient(90deg, var(--color-accent), var(--color-table-head));
   border-radius: 2px;
   transition: width 0.3s ease;
 }
 
 .progress-text {
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   font-size: 0.9rem;
   font-family: 'LXGW WenKai TC', 'LXGW WenKai', sans-serif;
 }
@@ -442,7 +442,7 @@ onMounted(() => {
 }
 
 .shape-fill {
-  fill: var(--accent-color);
+  fill: var(--color-accent);
   opacity: 0.1;
 }
 
@@ -489,11 +489,11 @@ onMounted(() => {
 }
 
 .dark .floating-circle {
-  background: linear-gradient(45deg, var(--accent-color), rgba(246, 173, 85, 0.3));
+  background: linear-gradient(45deg, var(--color-accent), rgba(246, 173, 85, 0.3));
 }
 
 .dark .shape-fill {
-  fill: var(--accent-color);
+  fill: var(--color-accent);
   opacity: 0.05;
 }
 </style>

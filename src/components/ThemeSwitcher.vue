@@ -2,7 +2,7 @@
   <button 
     @click="handleToggle" 
     class="fixed bottom-5 right-5 w-12 h-12 rounded-full flex items-center justify-center transition-colors theme-switcher-btn"
-    :style="{ backgroundColor: 'var(--switch-bg)', color: 'var(--text-color)' }"
+    :style="{ backgroundColor: 'var(--color-border)', color: 'var(--color-fg)' }"
     aria-label="切换主题"
   >
     <svg v-if="blogStore.theme === 'light'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -29,7 +29,7 @@ const handleToggle = () => {
 .theme-switcher-btn {
   z-index: 10000 !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--color-border);
   cursor: pointer !important;
   pointer-events: auto !important;
   position: fixed !important;

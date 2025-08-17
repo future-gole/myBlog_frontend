@@ -145,8 +145,8 @@ defineExpose({ handleKeydown })
 
 <style scoped>
 .link-selector {
-  background: var(--bg-color);
-  border: 1px solid var(--border-color);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   min-width: 300px;
@@ -157,19 +157,19 @@ defineExpose({ handleKeydown })
 
 .selector-header {
   padding: 8px 12px;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--bg-color-secondary);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-muted);
 }
 
 .selector-title {
   font-weight: 600;
   font-size: 0.9rem;
-  color: var(--text-color);
+  color: var(--color-fg);
 }
 
 .selector-hint {
   font-size: 0.75rem;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   float: right;
 }
 
@@ -183,13 +183,13 @@ defineExpose({ handleKeydown })
 .selector-item {
   padding: 8px 12px;
   cursor: pointer;
-  border-bottom: 1px solid var(--border-color-light);
+  border-bottom: 1px solid var(--color-border-muted);
   transition: background-color 0.2s;
 }
 
 .selector-item:hover,
 .selector-item.selected {
-  background: var(--accent-color-light);
+  background: var(--color-accent-muted);
 }
 
 .selector-item:last-child {
@@ -198,19 +198,19 @@ defineExpose({ handleKeydown })
 
 .post-title {
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--color-fg);
   margin-bottom: 2px;
 }
 
 .post-meta {
   font-size: 0.8rem;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
 }
 
 .no-results {
   padding: 16px 12px;
   text-align: center;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   font-style: italic;
 }
 </style>

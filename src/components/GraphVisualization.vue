@@ -49,11 +49,11 @@ onMounted(() => {
       .force("y", d3.forceY(height / 2).strength(0.05));
 
   // 使用数据的副本绑定到 D3 元素
-  const link = g.append("g").selectAll("line").data(linksCopy).join("line").style("stroke","var(--graph-link-color)").style("stroke-opacity",.8).style("stroke-width", 2);
+  const link = g.append("g").selectAll("line").data(linksCopy).join("line").style("stroke","var(--color-graph-link)").style("stroke-opacity",.8).style("stroke-width", 2);
   const node = g.append("g").selectAll("g").data(nodesCopy).join("g").attr("class", "node");
 
   node.append("circle").attr("r",12).attr("fill",d=>colors(d.category)).style("stroke","#fff").style("stroke-width","2px").style("cursor","pointer").on("click",(e,d)=>{ if(d.id) router.push(`/article/${d.id}`) });
-  node.append("text").text(d=>d.title).attr("dy","2.8em").style("pointer-events","none").style("font-size","12px").style("fill","var(--text-color)").style("text-anchor","middle").style("paint-order","stroke").style("stroke","var(--bg-color)").style("stroke-width","3px").style("font-weight",500).style("opacity",0).style("transition","opacity .3s");
+  node.append("text").text(d=>d.title).attr("dy","2.8em").style("pointer-events","none").style("font-size","12px").style("fill","var(--color-fg)").style("text-anchor","middle").style("paint-order","stroke").style("stroke","var(--color-bg)").style("stroke-width","3px").style("font-weight",500).style("opacity",0).style("transition","opacity .3s");
   node.on("mouseover", function() { d3.select(this).select("text").style("opacity", 1) }).on("mouseout", function() { d3.select(this).select("text").style("opacity", 0) });
 
   simulation.on("tick",()=>{ link.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y); node.attr("transform",d=>`translate(${d.x},${d.y})`); });

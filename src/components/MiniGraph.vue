@@ -217,9 +217,9 @@ watch(hasLinks, (newValue) => {
 .column-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .cards-list {
@@ -237,11 +237,11 @@ watch(hasLinks, (newValue) => {
 }
 
 .link-card {
-  background-color: var(--bg-color-soft);
+  background-color: var(--color-bg-muted);
   padding: 0.6rem 1rem;
   border-radius: 8px;
-  border: 1px solid var(--border-color);
-  color: var(--text-color);
+  border: 1px solid var(--color-border);
+  color: var(--color-fg);
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -255,8 +255,8 @@ watch(hasLinks, (newValue) => {
 
 .link-card:hover {
   transform: translateY(-2px) scale(1.02);
-  background-color: var(--bg-color);
-  border-color: var(--accent-color);
+  background-color: var(--color-bg);
+  border-color: var(--color-accent);
   box-shadow: 0 4px 10px rgba(0,0,0,0.06);
   color: var(--accent-color-dark);
 }
@@ -266,7 +266,7 @@ watch(hasLinks, (newValue) => {
   justify-content: center;
   align-items: center;
   height: 250px;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   font-style: italic;
 }
 </style>

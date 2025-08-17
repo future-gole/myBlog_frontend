@@ -7,7 +7,7 @@
         <h1 class="text-4xl font-handwriting">发布新文章</h1>
       </div>
 
-      <div class="mb-4 border-b border-[var(--border-color)] flex">
+      <div class="mb-4 border-b border-[var(--color-border)] flex">
         <button
             @click="isPreviewing = false"
             :class="['tab-button', { 'active-tab': !isPreviewing }]"
@@ -23,36 +23,30 @@
       </div>
 
       <!-- 编辑表单 -->
-      <form v-if="!isPreviewing" @submit.prevent="submitPost" class="admin-form space-y-6">
-        <!-- 标题和分类输入保持不变 -->
+      <form v-if="!isPreviewing" @submit.prevent="submitPost" class="space-y-6">
+        <!-- 标题 -->
         <div>
           <label class="block text-sm font-bold mb-2">标题</label>
-          <input v-model="form.title" type="text" class="w-full" required>
+          <input v-model="form.title" type="text" required
+                 class="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded px-3 py-2 text-[var(--color-fg)] placeholder:text-[var(--color-fg-subtle)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]/60 transition-colors"/>
         </div>
-        <div>
-          <label class="block text-sm font-bold mb-2">分类</label>
-          <select v-model="form.category" @change="onCategoryChange" class="w-full">
+        <!-- 分类 -->
+        <div class="space-y-2">
+          <label class="block text-sm font-bold">分类</label>
+          <select v-model="form.category" @change="onCategoryChange"
+                  class="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded px-3 py-2 text-[var(--color-fg)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]/60 transition-colors">
             <option v-for="cat in blogStore.categories.filter(c => c !== '全部')" :key="cat" :value="cat">{{ cat }}</option>
             <option value="new-category">（新建分类）</option>
           </select>
-          <input v-if="isNewCategory" v-model="newCategory" type="text" class="w-full mt-2" placeholder="输入新分类名">
+          <input v-if="isNewCategory" v-model="newCategory" type="text" placeholder="输入新分类名"
+                 class="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded px-3 py-2 text-[var(--color-fg)] placeholder:text-[var(--color-fg-subtle)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]/60 transition-colors"/>
         </div>
-
-        <!-- 修改后的内容输入区域 -->
+        <!-- 内容 -->
         <div class="content-input-wrapper">
           <label class="block text-sm font-bold mb-2">内容 (使用 [[标题]] 来链接文章)</label>
           <div class="textarea-container" ref="textareaContainer">
-            <textarea
-                ref="textareaRef"
-                v-model="form.content"
-                @paste="handlePaste"
-                @input="handleInput"
-                @keydown="handleKeydown"
-                @click="handleTextareaClick"
-                rows="20"
-                class="w-full"
-                required>
-            </textarea>
+            <textarea ref="textareaRef" v-model="form.content" @paste="handlePaste" @input="handleInput" @keydown="handleKeydown" @click="handleTextareaClick" rows="20" required
+                      class="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded px-4 py-3 leading-relaxed font-mono text-sm text-[var(--color-fg)] placeholder:text-[var(--color-fg-subtle)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]/60 transition-colors resize-y"></textarea>
 
             <!-- 文章链接选择器 -->
             <ArticleLinkSelector
@@ -66,11 +60,8 @@
             />
           </div>
         </div>
-
         <div>
-          <button type="submit" class="bg-[var(--accent-color)] hover:opacity-90 text-white font-bold py-2 px-6 rounded">
-            发布文章
-          </button>
+          <button type="submit" class="bg-[var(--color-accent)] hover:opacity-90 text-white font-bold py-2 px-6 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/60 transition">发布文章</button>
         </div>
       </form>
 
@@ -175,22 +166,22 @@ const previewHtml = computed(() => {
       const [category, title] = linkText.split('/', 2)
       const post = blogStore.posts.find(p => p.title === title && p.category === category)
       if (post) {
-        return `<a href="#/article/${post.id}" class="internal-link" target="_blank">${title}</a>`
+        return `<a href=\"#/article/${post.id}\" class=\"font-bold text-[var(--accent-color)] border-b-2 border-transparent hover:border-[var(--accent-color)] transition-colors\" target=\"_blank\">${title}</a>`
       }
-      return `<span class="internal-link-broken">${linkText}</span>`
+      return `<span class=\"line-through cursor-not-allowed text-[var(--color-fg-muted)]\">${linkText}</span>`
     } else {
       // 只有标题的情况
       const posts = titleToPostsMap.get(linkText)
       if (posts && posts.length > 0) {
         if (posts.length === 1) {
           // 只有一篇文章，直接链接
-          return `<a href="#/article/${posts[0].id}" class="internal-link" target="_blank">${linkText}</a>`
+          return `<a href=\"#/article/${posts[0].id}\" class=\"font-bold text-[var(--accent-color)] border-b-2 border-transparent hover:border-[var(--accent-color)] transition-colors\" target=\"_blank\">${linkText}</a>`
         } else {
           // 多篇同名文章，显示为模糊链接并提示
-          return `<span class="internal-link-ambiguous" title="存在多篇同名文章，请使用 [[分类/标题]] 格式">${linkText}</span>`
+          return `<span class=\"text-[var(--color-fg-muted)]\" title=\"存在多篇同名文章，请使用 [[分类/标题]] 格式\">${linkText}</span>`
         }
       }
-      return `<span class="internal-link-broken">${linkText}</span>`
+      return `<span class=\"line-through cursor-not-allowed text-[var(--color-fg-muted)]\">${linkText}</span>`
     }
   })
 
@@ -416,29 +407,16 @@ const submitPost = async () => {
   border-bottom: 3px solid transparent;
   margin-bottom: -1px;
   transition: all 0.2s ease-in-out;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
 }
 
 .tab-button:hover {
-  color: var(--accent-color);
+  color: var(--color-accent);
 }
 
 .tab-button.active-tab {
-  color: var(--accent-color);
-  border-bottom-color: var(--accent-color);
-}
-
-.admin-form .w-full {
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
-  transition: border-color 0.2s;
-}
-
-.admin-form .w-full:focus {
-  outline: none;
-  border-color: var(--accent-color);
-  box-shadow: 0 0 0 2px rgba(244, 146, 109, 0.2);
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
 }
 
 .preview-area {

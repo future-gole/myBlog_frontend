@@ -14,13 +14,13 @@ onMounted(() => {
 })
 </script>
 <style>
-.dynamic-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; opacity: 0; transition: opacity 0.8s; background: var(--bg-color); overflow: hidden; }
+.dynamic-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; opacity: 0; transition: opacity 0.8s; background: var(--color-bg); overflow: hidden; }
 .dark #starry-sky { opacity: 1; }
 .light #daylight-effect { opacity: 1; }
 .star { position: absolute; background-color: #fff; border-radius: 50%; animation: twinkle 5s infinite ease-in-out; }
 @keyframes twinkle { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 .shooting-star { position: absolute; height: 2px; background: linear-gradient(135deg, var(--accent-color), rgba(0, 0, 0, 0)); border-radius: 999px; filter: drop-shadow(0 0 6px var(--accent-color)); animation: shooting-star-anim 15s ease-in-out infinite; }
 @keyframes shooting-star-anim { 0% { transform: translateX(0) translateY(0) rotate(-45deg); } 100% { transform: translateX(-100vw) translateY(100vh) rotate(-45deg); opacity: 0; } }
-.particle { position: absolute; background-color: var(--particle-color); border-radius: 50%; animation: float-up 20s infinite linear; filter: blur(0.5px); }
+.particle { position: absolute; background-color: var(--color-particle); border-radius: 50%; animation: float-up 20s infinite linear; filter: blur(0.5px); }
 @keyframes float-up { 0% { transform: translateY(0); opacity: 0.7; } 100% { transform: translateY(-100vh); opacity: 0; } }
 </style>

@@ -55,9 +55,9 @@
 
         <!-- 中间主内容区域 -->
         <main class="main-content">
-          <!-- 关键：添加 markdown-content 类 -->
+          <!-- markdown 内容容器：添加 prose 类 -->
           <div
-              class="markdown-content line-numbers"
+              class="markdown-content prose prose-neutral dark:prose-invert max-w-none font-serif-content"
               v-html="renderedContent"
               ref="contentRef"
           ></div>
@@ -194,22 +194,22 @@ const renderedContent = computed(() => {
       const [category, title] = linkText.split('/', 2)
       const targetPost = blogStore.posts.find(p => p.title === title && p.category === category)
       if (targetPost) {
-        return `<a href="#/article/${targetPost.id}" class="internal-link">${title}</a>`
+        return `<a href="#/article/${targetPost.id}" class="font-bold text-[var(--color-accent)] border-b-2 border-transparent hover:border-[var(--color-accent)] transition-colors">${title}</a>`
       }
-      return `<span class="internal-link-broken">${linkText}</span>`
+      return `<span class="line-through cursor-not-allowed text-[var(--color-fg-muted)]">${linkText}</span>`
     } else {
       // 只有标题的情况
       const posts = titleToPostsMap.get(linkText)
       if (posts && posts.length > 0) {
         if (posts.length === 1) {
           // 只有一篇文章，直接链接
-          return `<a href="#/article/${posts[0].id}" class="internal-link">${linkText}</a>`
+          return `<a href="#/article/${posts[0].id}" class="font-bold text-[var(--color-accent)] border-b-2 border-transparent hover:border-[var(--color-accent)] transition-colors">${linkText}</a>`
         } else {
           // 多篇同名文章，显示为模糊链接并提示
-          return `<span class="internal-link-ambiguous" title="存在多篇同名文章">${linkText}</span>`
+          return `<span class="text-[var(--color-fg-muted)]" title="存在多篇同名文章">${linkText}</span>`
         }
       }
-      return `<span class="internal-link-broken">${linkText}</span>`
+      return `<span class="line-through cursor-not-allowed text-[var(--color-fg-muted)]">${linkText}</span>`
     }
   })
 
@@ -282,6 +282,16 @@ const updateReadingProgress = () => {
 watchEffect(() => {
   if (post.value && contentRef.value) {
     nextTick(() => {
+      // 代码块包装
+      contentRef.value.querySelectorAll('pre').forEach(pre => pre.classList.add('md-code'))
+      // 行内代码
+      contentRef.value.querySelectorAll('p code:not(pre code)').forEach(code => code.classList.add('md-inline-code'))
+      // 引用
+      contentRef.value.querySelectorAll('blockquote').forEach(bq => bq.classList.add('md-quote'))
+      // 表格
+      contentRef.value.querySelectorAll('table').forEach(t => t.classList.add('md-table'))
+      // 分割线
+      contentRef.value.querySelectorAll('hr').forEach(hr => hr.classList.add('md-hr'))
       Prism.highlightAllUnder(contentRef.value)
       generateTableOfContents()
     })
@@ -353,7 +363,7 @@ onUnmounted(() => {
   max-width: 1600px;
 }
 
-/* 三栏布局 - 电脑端优化空间利用 */
+/* 三栏布局 - 电脑端优化空间 */
 .article-layout {
   display: flex;
   gap: 3rem;
@@ -370,8 +380,8 @@ onUnmounted(() => {
 .meta-section {
   display: flex;
   gap: 1.5rem;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -387,7 +397,7 @@ onUnmounted(() => {
 .progress-line {
   width: 4px;
   height: 300px;
-  background: var(--border-color);
+  background: var(--color-border);
   border-radius: 2px;
   position: relative;
   overflow: hidden;
@@ -395,7 +405,7 @@ onUnmounted(() => {
 
 .progress-fill {
   width: 100%;
-  background: linear-gradient(to bottom, var(--accent-color), #ff8a65);
+  background: linear-gradient(to bottom, var(--color-accent), #ff8a65);
   border-radius: 2px;
   transition: height 0.3s ease;
   position: absolute;
@@ -407,7 +417,7 @@ onUnmounted(() => {
   left: -4px;
   width: 12px;
   height: 12px;
-  background: var(--accent-color);
+  background: var(--color-accent);
   border-radius: 50%;
   box-shadow: 0 0 20px rgba(244, 146, 109, 0.6);
   transition: top 0.3s ease;
@@ -436,7 +446,7 @@ onUnmounted(() => {
 .meta-label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--text-color-lighter);
+  color: var(--color-fg-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-family: 'LXGW WenKai TC', 'LXGW WenKai', sans-serif;
@@ -444,7 +454,7 @@ onUnmounted(() => {
 
 .category-badge {
   display: inline-block;
-  background: linear-gradient(135deg, var(--accent-color), #ff8a65);
+  background: linear-gradient(135deg, var(--color-accent), #ff8a65);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
@@ -460,7 +470,7 @@ onUnmounted(() => {
 }
 
 .meta-value {
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   font-size: 0.9rem;
   font-family: 'Noto Serif SC', serif;
 }
@@ -472,8 +482,8 @@ onUnmounted(() => {
 }
 
 .tag-item {
+  color: var(--color-accent);
   background: rgba(244, 146, 109, 0.1);
-  color: var(--accent-color);
   padding: 0.3rem 0.75rem;
   border-radius: 0.375rem;
   font-size: 0.8rem;
@@ -489,7 +499,7 @@ onUnmounted(() => {
 }
 
 .tag-item:hover {
-  background: var(--accent-color);
+  background: var(--color-accent);
   color: white;
   transform: translateY(-1px);
 }
@@ -510,8 +520,8 @@ onUnmounted(() => {
 }
 
 .toc-container {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 1rem;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -522,10 +532,10 @@ onUnmounted(() => {
 .toc-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-color);
+  color: var(--color-fg);
   margin-bottom: 1rem;
   font-family: 'LXGW WenKai TC', 'LXGW WenKai', sans-serif;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--color-border);
   padding-bottom: 0.75rem;
 }
 
@@ -541,7 +551,7 @@ onUnmounted(() => {
 
 .toc-link {
   display: block;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   text-decoration: none;
   padding: 0.5rem 0;
   border-left: 3px solid transparent;
@@ -553,17 +563,30 @@ onUnmounted(() => {
   word-wrap: break-word;
 }
 
+/* 增强层级缩进与层级线条 */
+.toc-level-2 .toc-link { padding-left:1.75rem; position:relative; }
+.toc-level-3 .toc-link { padding-left:2.25rem; position:relative; }
+.toc-level-4 .toc-link { padding-left:2.75rem; position:relative; }
+.toc-level-5 .toc-link { padding-left:3.25rem; position:relative; }
+.toc-level-6 .toc-link { padding-left:3.75rem; position:relative; }
+.toc-level-2 .toc-link::before,
+.toc-level-3 .toc-link::before,
+.toc-level-4 .toc-link::before,
+.toc-level-5 .toc-link::before,
+.toc-level-6 .toc-link::before { content:""; position:absolute; left:0.75rem; top:50%; width:6px; height:6px; border-radius:999px; background:var(--color-border); transform:translateY(-50%); }
+.toc-active .toc-link::before { background: var(--color-accent); }
+
 .toc-link:hover {
-  color: var(--accent-color);
+  color: var(--color-accent);
   background: rgba(244, 146, 109, 0.05);
-  border-left-color: var(--accent-color);
+  border-left-color: var(--color-accent);
   transform: translateX(4px);
 }
 
 .toc-active .toc-link {
-  color: var(--accent-color);
+  color: var(--color-accent);
   background: rgba(244, 146, 109, 0.1);
-  border-left-color: var(--accent-color);
+  border-left-color: var(--color-accent);
   font-weight: 600;
 }
 
@@ -699,9 +722,9 @@ onUnmounted(() => {
     align-items: center;
     justify-content: space-between;
     padding: 0.75rem;
-    background: var(--bg-color-secondary);
+    background: var(--color-bg-muted);
     border-radius: 0.5rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-border);
   }
 
   .meta-row.tags-row {
@@ -714,7 +737,7 @@ onUnmounted(() => {
   .meta-label {
     font-size: 0.75rem;
     font-weight: 700;
-    color: var(--text-color-lighter);
+    color: var(--color-fg-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     min-width: fit-content;
@@ -727,7 +750,7 @@ onUnmounted(() => {
 
   .meta-value {
     font-size: 0.8rem;
-    color: var(--text-color-light);
+    color: var(--color-fg-subtle);
     text-align: right;
   }
 

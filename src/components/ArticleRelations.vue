@@ -196,8 +196,8 @@ const navigateToArticle = (articleId) => {
 
 <style scoped>
 .article-relations {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -210,8 +210,8 @@ const navigateToArticle = (articleId) => {
 /* 导航栏样式 */
 .relations-nav {
   display: flex;
-  background: var(--bg-color-secondary);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--color-bg-muted);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .nav-tab {
@@ -223,7 +223,7 @@ const navigateToArticle = (articleId) => {
   padding: 1rem;
   border: none;
   background: transparent;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -231,13 +231,13 @@ const navigateToArticle = (articleId) => {
 }
 
 .nav-tab:hover {
-  color: var(--text-color);
+  color: var(--color-fg);
   background: rgba(244, 146, 109, 0.05);
 }
 
 .nav-tab.active {
-  color: var(--accent-color);
-  background: var(--card-bg);
+  color: var(--color-accent);
+  background: var(--color-surface);
 }
 
 .nav-tab.active::after {
@@ -312,8 +312,8 @@ const navigateToArticle = (articleId) => {
 
 /* 文章卡片样式 */
 .link-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   padding: 1.25rem;
   cursor: pointer;
@@ -341,7 +341,7 @@ const navigateToArticle = (articleId) => {
 .link-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border-color: var(--accent-color);
+  border-color: var(--color-accent);
 }
 
 .incoming-card:hover {
@@ -354,7 +354,7 @@ const navigateToArticle = (articleId) => {
 }
 
 .outgoing-card:hover {
-  border-color: var(--accent-color);
+  border-color: var(--color-accent);
   box-shadow: 0 8px 25px rgba(244, 146, 109, 0.15);
 }
 
@@ -366,7 +366,7 @@ const navigateToArticle = (articleId) => {
 }
 
 .card-category {
-  background: linear-gradient(135deg, var(--accent-color), #ff8a65);
+  background: linear-gradient(135deg, var(--color-accent), #ff8a65);
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 0.5rem;
@@ -382,14 +382,14 @@ const navigateToArticle = (articleId) => {
 
 .card-date {
   font-size: 0.75rem;
-  color: var(--text-color-lighter);
+  color: var(--color-fg-muted);
   font-family: 'Noto Serif SC', serif;
 }
 
 .card-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-color);
+  color: var(--color-fg);
   margin: 0 0 1rem 0;
   line-height: 1.4;
   font-family: 'LXGW WenKai TC', 'LXGW WenKai', sans-serif;
@@ -405,7 +405,7 @@ const navigateToArticle = (articleId) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   font-size: 0.8rem;
 }
 
@@ -431,7 +431,7 @@ const navigateToArticle = (articleId) => {
   width: 64px;
   height: 64px;
   margin-bottom: 1.5rem;
-  color: var(--text-color-lighter);
+  color: var(--color-fg-muted);
   opacity: 0.5;
 }
 
@@ -444,13 +444,13 @@ const navigateToArticle = (articleId) => {
   font-size: 1.1rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
-  color: var(--text-color-light);
+  color: var(--color-fg-subtle);
   font-family: 'LXGW WenKai TC', 'LXGW WenKai', sans-serif;
 }
 
 .empty-hint {
   font-size: 0.9rem;
-  color: var(--text-color-lighter);
+  color: var(--color-fg-muted);
   font-style: italic;
 }
 
@@ -473,152 +473,10 @@ const navigateToArticle = (articleId) => {
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .article-relations {
-    margin-top: 0;
-    border-radius: 1rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  }
-
-  .relations-nav {
-    background: var(--card-bg);
-    padding: 1rem;
-    gap: 0.75rem;
-  }
-
-  .nav-tab {
-    flex: 1;
-    padding: 1.25rem 1rem;
-    border-radius: 1rem;
-    border: 1px solid var(--border-color);
-    background: var(--bg-color-secondary);
-    transition: all 0.3s ease;
-    position: relative;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    min-height: 5rem;
-  }
-
-  .nav-tab::after {
-    display: none;
-  }
-
-  .nav-tab.active {
-    background: linear-gradient(135deg, var(--accent-color), #ff8a65);
-    color: white;
-    border-color: var(--accent-color);
-    box-shadow: 0 6px 20px rgba(244, 146, 109, 0.3);
-    transform: translateY(-3px);
-  }
-
-  .nav-tab.active .tab-icon {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    transform: scale(1.1);
-  }
-
-  .nav-tab.active .tab-badge {
-    background: white;
-    color: var(--accent-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  .nav-tab:not(.active):hover {
-    background: rgba(244, 146, 109, 0.1);
-    border-color: rgba(244, 146, 109, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  .tab-icon {
-    width: 28px;
-    height: 28px;
-  }
-
-  .tab-icon svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .tab-text {
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-align: center;
-  }
-
-  .tab-badge {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-    min-width: 1.5rem;
-    height: 1.5rem;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 700;
-    border-radius: 0.75rem;
-  }
-
-  .relations-content {
-    padding: 1.25rem;
-    max-height: 65vh;
-  }
-
-  .link-card {
-    padding: 1.25rem;
-    border-radius: 0.75rem;
-  }
-
-  .card-title {
-    font-size: 1rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .card-header {
-    margin-bottom: 0.75rem;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .card-category {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.8rem;
-    border-radius: 0.5rem;
-  }
-
-  .card-date {
-    font-size: 0.75rem;
-  }
-
-  .links-grid {
-    gap: 1rem;
-  }
-
-  .link-direction {
-    font-size: 0.8rem;
-  }
-
-  .empty-state {
-    padding: 2.5rem 1.5rem;
-    min-height: 180px;
-  }
-
-  .empty-icon {
-    width: 56px;
-    height: 56px;
-    margin-bottom: 1.25rem;
-  }
-
-  .empty-text {
-    font-size: 1.1rem;
-  }
-
-  .empty-hint {
-    font-size: 0.9rem;
-  }
+  .relations-nav { background: var(--color-surface); }
+  .nav-tab { border: 1px solid var(--color-border); background: var(--color-bg-muted); }
+  .nav-tab.active { background: linear-gradient(135deg, var(--color-accent), #ff8a65); border-color: var(--color-accent); }
+  .nav-tab.active .tab-badge { color: var(--color-accent); }
 }
 
 @media (max-width: 480px) {

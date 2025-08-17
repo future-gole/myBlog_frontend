@@ -1,18 +1,18 @@
 <template>
   <div class="page min-h-screen flex items-center justify-center">
-    <div class="bg-[var(--card-bg)] rounded-lg p-8 max-w-md w-full mx-4 border border-[var(--border-color)] shadow-lg">
+    <div class="bg-[var(--color-surface)] rounded-lg p-8 max-w-md w-full mx-4 border border-[var(--color-border)] shadow-lg">
       <div class="text-center mb-8">
         <h1 class="text-3xl font-handwriting mb-2">管理员登录</h1>
-        <p class="text-[var(--text-color-light)] text-sm">请输入管理员账号密码</p>
+        <p class="text-[var(--color-fg-subtle)] text-sm">请输入管理员账号密码</p>
       </div>
 
-      <form @submit.prevent="handleLogin" class="admin-form space-y-6">
+      <form @submit.prevent="handleLogin" class="space-y-6 max-w-md mx-auto bg-[var(--color-surface)]/60 dark:bg-[var(--color-surface)]/40 backdrop-blur rounded-xl p-8 shadow-md border border-[var(--color-border)]">
         <div>
           <label class="block text-sm font-bold mb-2">用户名</label>
           <input
               v-model="form.username"
               type="text"
-              class="w-full"
+              class="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded px-3 py-2 text-[var(--color-fg)] placeholder:text-[var(--color-fg-subtle)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]/60 transition-colors"
               placeholder="请输入用户名"
               required
               :disabled="loading"
@@ -24,7 +24,7 @@
           <input
               v-model="form.password"
               type="password"
-              class="w-full"
+              class="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded px-3 py-2 text-[var(--color-fg)] placeholder:text-[var(--color-fg-subtle)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]/60 transition-colors"
               placeholder="请输入密码"
               required
               :disabled="loading"
@@ -37,7 +37,7 @@
 
         <button
             type="submit"
-            class="w-full bg-[var(--accent-color)] hover:opacity-90 text-white font-bold py-3 px-6 rounded transition-all disabled:opacity-50"
+            class="w-full bg-[var(--color-accent)] hover:opacity-90 text-white font-bold py-3 px-6 rounded transition-all disabled:opacity-50"
             :disabled="loading"
         >
           {{ loading ? '登录中...' : '登录' }}
@@ -47,7 +47,7 @@
       <div class="mt-6 text-center">
         <router-link
             to="/"
-            class="text-[var(--text-color-light)] hover:text-[var(--accent-color)] text-sm transition-colors"
+            class="text-[var(--color-fg-subtle)] hover:text-[var(--color-accent)] text-sm transition-colors"
         >
           ← 返回首页
         </router-link>

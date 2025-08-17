@@ -22,6 +22,6 @@ onMounted(() => {
 })
 </script>
 <style scoped>
-#preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 1000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease-in-out, visibility 0.8s; }
+#preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--color-bg); z-index: 1000; display: flex; justify-content: center; align-items: center; transition: opacity 0.8s ease-in-out, visibility 0.8s; }
 #preloader.loaded { opacity: 0; visibility: hidden; }
 </style>
