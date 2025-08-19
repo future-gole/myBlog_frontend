@@ -35,11 +35,19 @@
           <label class="block text-sm font-bold">分类</label>
           <select v-model="form.category" @change="onCategoryChange"
                   class="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded px-3 py-2 text-[var(--color-fg)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]/60 transition-colors">
-            <option v-for="cat in blogStore.categories.filter(c => c !== '全部')" :key="cat" :value="cat">{{ cat }}</option>
+            <!-- 使用 categoriesUI, 目前仍用 name 作为值; 若后端改为用 categoryId 提交, 将 :value 改为 cat.id 并在提交时映射 -->
+            <option v-for="cat in blogStore.categoriesUI.filter(c => c.name !== '全部')" :key="cat.id" :value="cat.name">{{ cat.name }}</option>
             <option value="new-category">（新建分类）</option>
           </select>
           <input v-if="isNewCategory" v-model="newCategory" type="text" placeholder="输入新分类名"
                  class="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded px-3 py-2 text-[var(--color-fg)] placeholder:text-[var(--color-fg-subtle)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]/60 transition-colors"/>
+          <div v-if="isNewCategory" class="flex items-center gap-3">
+            <label class="text-sm font-medium whitespace-nowrap">分类颜色</label>
+            <input type="color" v-model="newCategoryColor" class="h-9 w-14 p-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded cursor-pointer"/>
+            <input v-model="newCategoryColor" type="text" placeholder="#RRGGBB" maxlength="9"
+                   class="flex-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded px-3 py-2 text-[var(--color-fg)] placeholder:text-[var(--color-fg-subtle)] shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] focus:border-[var(--color-accent)]/60 transition-colors"/>
+            <button type="button" @click="randomizeColor" class="text-xs px-2 py-1 border rounded hover:bg-[var(--color-surface)] transition">随机</button>
+          </div>
         </div>
         <!-- 内容 -->
         <div class="content-input-wrapper">
@@ -104,12 +112,13 @@ const router = useRouter()
 // 现有的响应式数据保持不变
 const form = reactive({
   title: '',
-  category: blogStore.categories[1] || '',
+  category: (blogStore.categoriesUI[1] && blogStore.categoriesUI[1].name) || '',
   image: '',
   content: ''
 })
 const isNewCategory = ref(false)
 const newCategory = ref('')
+const newCategoryColor = ref('#7aa2f7')
 const isPreviewing = ref(false)
 const previewContainerRef = ref(null)
 const textareaRef = ref(null)
@@ -323,6 +332,7 @@ const handleLinkCancel = () => {
 // 现有的其他函数保持不变
 const onCategoryChange = () => {
   isNewCategory.value = form.category === 'new-category'
+  if (isNewCategory.value && !newCategoryColor.value) newCategoryColor.value = randomColor()
 }
 
 const handlePaste = (event) => {
@@ -373,11 +383,16 @@ const submitPost = async () => {
   if (isNewCategory.value) {
     if (!newCategory.value.trim()) { alert('新分类名不能为空！'); return; }
     finalCategory = newCategory.value.trim();
+    if (!/^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/.test(newCategoryColor.value)) {
+      alert('请输入合法的颜色 (例如 #3498db)');
+      return;
+    }
   }
 
   const newPostData = {
     title: form.title,
     category: finalCategory,
+    categoryColor: isNewCategory.value ? newCategoryColor.value : undefined,
     image: form.image || `https://placehold.co/400x300/cccccc/fdfaf6?text=${encodeURIComponent(form.title)}`,
     content: form.content,
     tags: []
@@ -392,6 +407,12 @@ const submitPost = async () => {
     alert('发布失败，请查看控制台');
   }
 }
+
+function randomColor() {
+  const c = '#' + Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0')
+  return c
+}
+function randomizeColor(){ newCategoryColor.value = randomColor() }
 </script>
 
 <style scoped>
