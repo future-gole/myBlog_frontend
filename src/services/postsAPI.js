@@ -31,7 +31,8 @@ export const getPostById = (id) => {
 
 /**
  * 发布一篇新文章 (需认证)
- * @param {object} postData - 文章数据 { title, category, image, content }
+ * @param {object} postData - 文章数据 { title, category, categoryColor, image, content }
+ * 说明: 后端已在 PostRequestDto 中新增 categoryColor 字段, 用于分类在关系图谱及展示中的统一颜色。
  */
 export const createPost = (postData) => {
   return apiClient.post('/posts/create', postData, { requiresAuth: true });
@@ -41,7 +42,8 @@ export const createPost = (postData) => {
  * 更新一篇文章 (需认证)
  * @param {string} categorySlug - 原分类的 slug
  * @param {string} titleSlug - 原标题的 slug
- * @param {object} postData - 需要更新的文章数据
+ * @param {object} postData - 需要更新的文章数据 { title?, category?, categoryColor?, featuredImageId?, content?, tagNames? }
+ * 说明: 若修改分类或分类颜色，请一并提交 category 与 categoryColor 保证关系图谱颜色同步。
  */
 export const updatePost = (categorySlug, titleSlug, postData) => {
   return apiClient.put(`/posts/update`, postData, { requiresAuth: true });

@@ -3,7 +3,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
+import { useBlogStore } from '@/store/blogStore'
 import * as d3 from 'd3'
 import { useRouter } from 'vue-router'
 
@@ -17,10 +18,15 @@ const container = ref(null)
 const router = useRouter()
 let simulation;
 
-// 这部分颜色和分类的逻辑保持不变
-const colors = d3.scaleOrdinal(["#e6a3a3","#f0c2a3","#aed9b4","#a3cce6"]);
-const categories = [...new Set(props.nodes.map(n => n.category))];
-colors.domain(categories);
+// 颜色策略升级: 优先节点自带 categoryColor, 否则回退到全局映射, 再 fallback 到默认调色板
+const defaultPalette = d3.scaleOrdinal(["#e6a3a3","#f0c2a3","#aed9b4","#a3cce6","#d4b4e6","#e6d1a3"]);
+const blogStore = useBlogStore();
+const colorFor = (d) => {
+  if (d.categoryColor) return d.categoryColor;
+  const mapped = blogStore.categoryColorMap?.[d.category];
+  if (mapped) return mapped;
+  return defaultPalette(d.category);
+}
 
 onMounted(() => {
   if (!container.value) return;
@@ -52,7 +58,7 @@ onMounted(() => {
   const link = g.append("g").selectAll("line").data(linksCopy).join("line").style("stroke","var(--color-graph-link)").style("stroke-opacity",.8).style("stroke-width", 2);
   const node = g.append("g").selectAll("g").data(nodesCopy).join("g").attr("class", "node");
 
-  node.append("circle").attr("r",12).attr("fill",d=>colors(d.category)).style("stroke","#fff").style("stroke-width","2px").style("cursor","pointer").on("click",(e,d)=>{ if(d.id) router.push(`/article/${d.id}`) });
+  node.append("circle").attr("r",12).attr("fill",d=>colorFor(d)).style("stroke","#fff").style("stroke-width","2px").style("cursor","pointer").on("click",(e,d)=>{ if(d.id) router.push(`/article/${d.id}`) });
   node.append("text").text(d=>d.title).attr("dy","2.8em").style("pointer-events","none").style("font-size","12px").style("fill","var(--color-fg)").style("text-anchor","middle").style("paint-order","stroke").style("stroke","var(--color-bg)").style("stroke-width","3px").style("font-weight",500).style("opacity",0).style("transition","opacity .3s");
   node.on("mouseover", function() { d3.select(this).select("text").style("opacity", 1) }).on("mouseout", function() { d3.select(this).select("text").style("opacity", 0) });
 
@@ -65,24 +71,28 @@ onMounted(() => {
   svg.call(zoom);
 
   watch(() => props.activeCategory, (newCategory) => {
-    node.transition().duration(500).style("opacity",d=>"全部"===newCategory||d.category===newCategory?1:.1);
+    const allMode = newCategory === '全部'
+    node.transition().duration(400).style('opacity', d => allMode || d.category === newCategory ? 1 : 0.12)
+    link.transition().duration(400).style('stroke-opacity', l => {
+      if (allMode) return 0.6
+      return l.source.category === newCategory && l.target.category === newCategory ? 0.7 : 0.03
+    })
 
-    // 【额外修正】你之前的 watch 逻辑也有一个小问题，这里也一并修正了
-    // 原代码: "全部"===newCategory?.8  这是错误的
-    link.transition().duration(500).style("stroke-opacity", l => {
-      if (newCategory === '全部') return 0.8;
-      // 注意：D3修改了links副本，source和target现在是完整的节点对象
-      return l.source.category === newCategory && l.target.category === newCategory ? 0.9 : 0.05;
-    });
-
-    if("全部"===newCategory){
-      simulation.force("x", d3.forceX(width / 2).strength(0.05));
-      simulation.force("y", d3.forceY(height / 2).strength(0.05));
+    // 重新定义聚焦力: 选中分类的节点聚集屏幕中心，其他节点柔和环绕外围
+    if (allMode) {
+      simulation
+        .force('x', d3.forceX(width / 2).strength(0.05))
+        .force('y', d3.forceY(height / 2).strength(0.05))
+        .force('radial', null)
     } else {
-      simulation.force("x", d3.forceX(d => d.category === newCategory ? width / 4 : .8 * width).strength(.1));
-      simulation.force("y", d3.forceY(d => d.category === newCategory ? height / 3 : height * 0.66).strength(.1));
+      const centerX = width / 2
+      const centerY = height / 2
+      simulation
+        .force('x', d3.forceX(d => d.category === newCategory ? centerX : centerX + (Math.random()*2-1)*200).strength(d => d.category === newCategory ? 0.2 : 0.02))
+        .force('y', d3.forceY(d => d.category === newCategory ? centerY : centerY + (Math.random()*2-1)*200).strength(d => d.category === newCategory ? 0.2 : 0.02))
+        .force('radial', d3.forceRadial(d => d.category === newCategory ? 0 : 380, centerX, centerY).strength(d => d.category === newCategory ? 0 : 0.12))
     }
-    simulation.alpha(1).restart();
+    simulation.alpha(0.9).restart()
   });
 });
 </script>

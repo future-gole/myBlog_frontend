@@ -7,7 +7,8 @@
         <p class="text-md mt-1" style="color: var(--color-fg-subtle);">点击下面的主题标签，探索不同的灵感星系。</p>
         <CategoryTags 
           v-model="activeCategory"
-          :categories="blogStore.categories"
+          :categories="blogStore.categoriesUI.map(c=>c.name)"  
+          :color-map="blogStore.categoryColorMap"
           :center-align="false"
           :show-scroll-hint="true"
           class="mt-4"
